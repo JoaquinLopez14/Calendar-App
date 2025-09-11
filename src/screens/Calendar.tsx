@@ -1,12 +1,10 @@
 import { View, Text } from "react-native"
 import { styles } from "./HomeStyles"
-import Button from "../components/button"
 
-export default function Home() {
+export default function Calendar() {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Hola Julieta</Text>
-            <Button />
+            <Text style={styles.title}>Calendario</Text>
         </View>
     )
 }

@@ -4,8 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from "@expo/vector-icons";
 
-import Home from './screens/Home';
-import Calendar from './screens/Calendar';
+import Home from './src/screens/Home';
+import Calendar from './src/screens/Calendar';
 
 const Tab = createBottomTabNavigator()
 
