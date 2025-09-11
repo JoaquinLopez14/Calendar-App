@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator()
 
 
 export default function App() {
-  const [loaded] = useFonts({ Montserrat: require("./assets/fonts/Montserrat.ttf") })
+  const [loaded] = useFonts({ Montserrat: require("./src/assets/fonts/Montserrat.ttf"), Manrope: require("./src/assets/fonts/Manrope.ttf") })
 
   if (!loaded) {
     return (
