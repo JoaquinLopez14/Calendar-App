@@ -1,0 +1,3 @@
+<View style={calendarStyles.grid}> {calendar.map((day, idx) => ( <Pressable key={idx} style={({ pressed })=> [
+        calendarStyles.dayCell, pressed && { backgroundColor: "#d1c4e9" } ]} disabled={!day} onPress={() => day &&
+        handlePressDay(day)} > {day && <Text>{day}</Text>} </Pressable> ))} </View>

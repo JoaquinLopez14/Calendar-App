@@ -1,12 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 export const calendarStyles = StyleSheet.create({
-    nameOfMonth: {
-        fontSize: 35,
-        fontWeight: "100",
-        fontFamily: "Manrope",
-        color: "black",
-        marginTop: 10
+    title: {
+        fontSize: 70,
+        fontFamily: "Montserrat"
     },
     grid: {
         backgroundColor: "#ffffffc9",
@@ -24,13 +21,11 @@ export const calendarStyles = StyleSheet.create({
         borderColor: "#000000ff",
     },
     container: {
-        flex: 1,
-        justifyContent: "center",
+        display: "flex",
+        margin: 5,
+        marginTop: 30,
+        paddingTop: 20,
         alignItems: "center",
-    },
-    background: {
-        flex: 1,
-        backgroundColor: "#450000"
     },
     daysContainer: {
         flexDirection: "row",
@@ -41,13 +36,41 @@ export const calendarStyles = StyleSheet.create({
         alignItems: "center",
     },
     navContainer: {
-        display: "flex",
+        position: "relative",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        gap: 20,
+        justifyContent: "center",
+        marginTop: 20
     },
-    arrow: {
-        fontSize: 40,
+    centerText: {
+        alignItems: "center",
+        minWidth: 250
+    },
+    arrowLeft: {
+        position: "absolute",
+        left: -50,
+        top: "50%",
+        transform: [{ translateY: -10 }],
+    },
+    arrowRight: {
+        position: "absolute",
+        right: -50,
+        top: "50%",
+        transform: [{ translateY: -10 }],
+    },
+    yearText: {
+        fontSize: 28,
+        fontWeight: "100",
+        fontFamily: "Manrope"
+    },
+    nameOfMonth: {
+        fontSize: 50,
+        fontWeight: "100",
+        fontFamily: "Manrope"
+    },
+    selectedDay: {
+        fontSize: 20,
+        fontFamily: "Manrope",
+        marginTop: 30
     }
 });
