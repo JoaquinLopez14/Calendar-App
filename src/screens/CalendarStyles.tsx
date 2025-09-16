@@ -68,9 +68,64 @@ export const calendarStyles = StyleSheet.create({
         fontWeight: "100",
         fontFamily: "Manrope"
     },
+    selectedDayContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
     selectedDay: {
         fontSize: 20,
+        textAlign: "center",
         fontFamily: "Manrope",
         marginTop: 30
+    },
+    selectedDayText: {
+        textAlign: "center",
+        fontSize: 25,
+        fontFamily: "Manrope",
+        textTransform: "uppercase"
+    },
+    buttonMood: {
+        display: "flex",
+        justifyContent: "center",
+        borderWidth: 0.5,
+        width: 100,
+        height: 40,
+        margin: 10,
+        padding: 2,
+        borderRadius: 2,
+        backgroundColor: "#6699f798",
+    },
+    modalMoodContainer: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 10,
+        margin: 10,
+    },
+    moodWrapper: {
+        padding: 5,
+    },
+    modalMoodImg: {
+        width: 60,
+        height: 60,
+    },
+    modalAcceptButton: {
+        color: "black",
+        fontStyle: "italic",
+        textTransform: "uppercase",
+        backgroundColor: "white",
+        fontFamily: "Montserrat",
+        fontSize: 20,
+        textAlign: "center",
+        borderWidth: 2,
+        borderColor: "white",
+        width: 100,
+        margin: "auto",
+        marginTop: 20,
+        padding: 2,
+        borderRadius: 10
     }
 });

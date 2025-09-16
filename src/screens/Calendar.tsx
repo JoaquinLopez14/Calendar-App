@@ -1,15 +1,36 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View, Image } from 'react-native';
 import { es } from "date-fns/locale"
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 import { calendarStyles } from './CalendarStyles';
 import { format, getDaysInMonth, startOfMonth, addMonths, subMonths, getISODay } from "date-fns"
+import Modal from '../components/Modal';
+import { saveMood, loadMoods } from '../storage/fileSystem';
 
 export default function Calendar() {
 
     const [currentDate, setCurrentDate] = useState(new Date(2025, 0, 1))
     const [selectedDay, setSelectedDay] = useState<number | null>(null)
+    const [modalOpen, setIsModalOpen] = useState(false)
+    const [moodSelected, setMoodSelected] = useState<number | null>(null)
+    const [moodData, setMoodData] = useState<Record<string, number>>({})
+
+    useEffect(() => {
+        const fetchMoods = async () => {
+            const data = await loadMoods()
+            setMoodData(data);
+        };
+        fetchMoods();
+    }, [])
+
+
+    const moods = [require("../assets/mood/happy.png"),
+    require("../assets/mood/cry.png"),
+    require("../assets/mood/angry.png"),
+    require("../assets/mood/neutral.png"),
+    require("../assets/mood/love.png"),
+    require("../assets/mood/sensitive.png"),]
 
     const nameOfMonth = startOfMonth(currentDate)
 
@@ -44,12 +65,36 @@ export default function Calendar() {
         setSelectedDay(null)
     }
 
-    const calendar = generateCalendar(currentDate)
-
     const handlePressDay = (day: number) => {
-
         setSelectedDay(day)
     }
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setMoodSelected(null)
+    }
+
+    const handleSelectedMood = (idx: number) => {
+        setMoodSelected(idx)
+    }
+
+    const handleSaveMood = async () => {
+        if (selectedDay !== null && moodSelected !== null) {
+            const fullDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
+
+            await saveMood(fullDate, moodSelected);
+            const data = await loadMoods();
+            setMoodData(data);
+
+            handleCloseModal();
+        }
+    };
+
+    const calendar = generateCalendar(currentDate)
 
     const capitalizeMonth = capitalize(format(nameOfMonth, "MMMM", { locale: es }))
 
@@ -103,11 +148,35 @@ export default function Calendar() {
                     ))}
                 </View>
                 {selectedDay && (
-                    <Text style={calendarStyles.selectedDay}>
-                        Seleccionaste el día {selectedDay} de {capitalizeMonth}
-                    </Text>
+                    <View style={calendarStyles.selectedDayContainer}>
+                        <Text style={calendarStyles.selectedDay}>
+                            ¿Qué quieres destacar del dia {selectedDay} de {capitalizeMonth} ?
+                        </Text>
+                        <Pressable style={calendarStyles.buttonMood} onPress={handleOpenModal}>
+                            <Text style={calendarStyles.selectedDayText}>Mood</Text>
+                        </Pressable>
+                    </View>
                 )}
             </View>
+            {modalOpen && (
+                <Modal
+                    handleCloseModal={handleCloseModal}
+                    title={"¿Cómo te sentís este día?"} >
+                    <View style={calendarStyles.modalMoodContainer}>
+                        {moods.map((img, idx) => (
+                            <Pressable key={idx} onPress={() => handleSelectedMood(idx)}>
+                                <View style={[
+                                    calendarStyles.moodWrapper,
+                                    moodSelected === idx && { backgroundColor: "#7db2e4ff", borderRadius: 15 }
+                                ]}>
+                                    <Image source={img} style={calendarStyles.modalMoodImg} />
+                                </View>
+                            </Pressable>
+                        ))}
+                    </View>
+                </Modal>
+            )}
+            <Text>{JSON.stringify(moodData, null, 2)}</Text>
         </LinearGradient>
     )
 }
