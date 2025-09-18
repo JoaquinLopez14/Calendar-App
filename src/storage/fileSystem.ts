@@ -22,3 +22,11 @@ export async function loadMoods(): Promise<Record<string, number>> {
     const content = await FileSystem.readAsStringAsync(fileUri);
     return JSON.parse(content);
 }
+
+export async function clearMoods() {
+    try {
+        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify({}));
+    } catch (err) {
+        console.error("Error clearing moods", err);
+    }
+}

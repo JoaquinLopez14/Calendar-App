@@ -18,7 +18,20 @@ export const calendarStyles = StyleSheet.create({
         alignItems: "center",
         borderWidth: 0.5,
         borderRadius: 6,
-        borderColor: "#000000ff",
+        borderColor: "#00000086",
+        overflow: "hidden"
+    },
+    dayCellBackground: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+    },
+    dayText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#000",
     },
     container: {
         display: "flex",

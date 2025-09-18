@@ -2,11 +2,12 @@ import { Pressable, Text, View, Image } from 'react-native';
 import { es } from "date-fns/locale"
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from 'react';
+import DayCell from '../components/DayCell';
 import { LinearGradient } from "expo-linear-gradient";
 import { calendarStyles } from './CalendarStyles';
 import { format, getDaysInMonth, startOfMonth, addMonths, subMonths, getISODay } from "date-fns"
 import Modal from '../components/Modal';
-import { saveMood, loadMoods } from '../storage/fileSystem';
+import { saveMood, loadMoods, clearMoods } from '../storage/fileSystem';
 
 export default function Calendar() {
 
@@ -37,6 +38,9 @@ export default function Calendar() {
     const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
     const days = ["L", "M", "M", "J", "V", "S", "D"]
+
+    const fullDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
+
 
     const generateCalendar = (currentDate: any) => {
         const totalDays = getDaysInMonth(currentDate)
@@ -84,14 +88,17 @@ export default function Calendar() {
 
     const handleSaveMood = async () => {
         if (selectedDay !== null && moodSelected !== null) {
-            const fullDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
-
             await saveMood(fullDate, moodSelected);
             const data = await loadMoods();
             setMoodData(data);
 
             handleCloseModal();
         }
+    };
+
+    const handleClearMoods = async () => {
+        await clearMoods();
+        setMoodData({});
     };
 
     const calendar = generateCalendar(currentDate)
@@ -111,7 +118,6 @@ export default function Calendar() {
                     <Pressable onPress={handlePrevMonth} style={calendarStyles.arrowLeft}>
                         <Ionicons name="chevron-back" size={28} color="black" />
                     </Pressable>
-
                     <View style={calendarStyles.centerText}>
                         <Text style={calendarStyles.yearText}>
                             {capitalize(format(nameOfMonth, "yyyy"))}
@@ -134,17 +140,15 @@ export default function Calendar() {
                 </View>
                 <View style={calendarStyles.grid}>
                     {calendar.map((day, idx) => (
-                        <Pressable
+                        <DayCell
                             key={idx}
-                            style={[
-                                calendarStyles.dayCell,
-                                day !== null && selectedDay === day && { backgroundColor: "#7db2e4ff" }
-                            ]}
-                            disabled={day === null}
-                            onPress={() => day !== null && handlePressDay(day)}
-                        >
-                            {day !== null && <Text>{day}</Text>}
-                        </Pressable>
+                            day={day}
+                            currentDate={currentDate}
+                            selectedDay={selectedDay}
+                            moodData={moodData}
+                            moods={moods}
+                            onPress={handlePressDay}
+                        />
                     ))}
                 </View>
                 {selectedDay && (
@@ -163,20 +167,30 @@ export default function Calendar() {
                     handleCloseModal={handleCloseModal}
                     title={"¿Cómo te sentís este día?"} >
                     <View style={calendarStyles.modalMoodContainer}>
-                        {moods.map((img, idx) => (
-                            <Pressable key={idx} onPress={() => handleSelectedMood(idx)}>
+                        {moods.map((img, index) => (
+                            <Pressable key={index} onPress={() => handleSelectedMood(index)}>
                                 <View style={[
                                     calendarStyles.moodWrapper,
-                                    moodSelected === idx && { backgroundColor: "#7db2e4ff", borderRadius: 15 }
+                                    moodSelected === index && { backgroundColor: "#7db2e4ff", borderRadius: 15 }
                                 ]}>
                                     <Image source={img} style={calendarStyles.modalMoodImg} />
                                 </View>
                             </Pressable>
                         ))}
                     </View>
+                    {moodSelected !== null && (
+                        <Pressable onPress={() => handleSaveMood()}>
+                            <Text style={calendarStyles.modalAcceptButton}>
+                                Aceptar
+                            </Text>
+                        </Pressable>
+                    )}
                 </Modal>
             )}
-            <Text>{JSON.stringify(moodData, null, 2)}</Text>
-        </LinearGradient>
-    )
+            <Pressable onPress={() => handleClearMoods()}>
+                <Text style={calendarStyles.modalAcceptButton}>
+                    Borrar Moods
+                </Text>
+            </Pressable>
+        </LinearGradient>)
 }
